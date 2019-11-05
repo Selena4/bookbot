@@ -35,7 +35,7 @@ while True:
 							for id in snd.messages.getConversationMembers(peer_id=event.object.peer_id)["items"]:
 								if id["member_id"] > 0:
 									items.append(id["member_id"])
-							say("Для следующей страницы введите '\!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
+							say("Для следующей страницы введите \'!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
 							continue
 						say("Режим просмотра уже запущен. Для дальнейших действий напишите \'!r\'. Осталось: " + str(len(items)),event.object.peer_id)
 						

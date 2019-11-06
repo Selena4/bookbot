@@ -1,6 +1,6 @@
 import vk_api, random
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-vk = vk_api.VkApi(token'')
+vk = vk_api.VkApi(token='')
 vk._auth_token()
 snd = vk.get_api()
 longpoll = VkBotLongPoll(vk,188426283)
@@ -12,6 +12,11 @@ def say(msg, id):
 while True:
 	for event in longpoll.listen():
 		if event.type == VkBotEventType.MESSAGE_NEW:
+			if event.object.text.lower() == "!p":
+				msg = ""
+				for i in items:
+					msg = msg + "@id" + str(i) +", "
+				say(msg,event.object.peer_id)
 			if s == -1:
 				admins = []
 				for id in snd.messages.getConversationMembers(peer_id=event.object.peer_id)["items"]:
@@ -56,8 +61,8 @@ while True:
 								for id in snd.messages.getConversationMembers(peer_id=event.object.peer_id)["items"]:
 									if id["member_id"] > 0:
 										items.append(id["member_id"])
-								say("Для следующей страницы введите '\!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
+								say("Для следующей страницы введите \'!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
 								continue
-						say("Для следующей страницы введите '\!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
+						say("Для следующей страницы введите \'!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
 
 				

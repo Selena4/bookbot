@@ -1,14 +1,27 @@
-import vk_api, random
+import vk_api, random, fitz,io,time,requests,json
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
+
 vk = vk_api.VkApi(token='')
 vk._auth_token()
 snd = vk.get_api()
 longpoll = VkBotLongPoll(vk,188426283)
-stages = ["1 stage", "2 stage"]
+stages =  []
+pdf = 'book.pdf'
+doc = fitz.open(pdf)
+
+for i in range(len(doc)):
+        file = open("pages/page" + str(i) + ".txt",'r')
+        stages.append(file.read())
+        file.close()
+print('[info] bot started.')
 s = -1
 items = []
 def say(msg, id):
-	snd.messages.send(peer_id = id, message = msg,random_id =random.randint(0, 2147483647))
+        if len(msg) > 4000:
+                snd.messages.send(peer_id = id, message = msg[:4000],random_id =random.randint(0, 2147483647))
+                snd.messages.send(peer_id = id, message = msg[4000:],random_id =random.randint(0, 2147483647))
+        else:
+                snd.messages.send(peer_id = id, message = msg,random_id =random.randint(0, 2147483647))
 while True:
 	for event in longpoll.listen():
 		if event.type == VkBotEventType.MESSAGE_NEW:
@@ -66,3 +79,4 @@ while True:
 						say("Для следующей страницы введите \'!r\'. Осталось: "+ str(len(items)),event.object.peer_id)
 
 				
+

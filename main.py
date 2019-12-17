@@ -1,20 +1,19 @@
-import vk_api, random, fitz,io,time,requests,json
+﻿import vk_api, codecs, random
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-
+import os
 vk = vk_api.VkApi(token='')
 vk._auth_token()
 snd = vk.get_api()
 longpoll = VkBotLongPoll(vk,188426283)
 stages =  []
-pdf = 'book.pdf'
-doc = fitz.open(pdf)
-
-for i in range(len(doc)):
-        file = open("pages/page" + str(i) + ".txt",'r')
+txt = 'book.txt'
+doc = os.listdir('pages/')
+for i in range(1,len(doc)+1):
+        file = codecs.open("pages/page" + str(i) + ".txt", "r", "utf_8_sig" )
         stages.append(file.read())
         file.close()
 print('[info] bot started.')
-s = -1
+s = 0
 items = []
 def say(msg, id):
         if len(msg) > 4000:
@@ -30,7 +29,7 @@ while True:
 				for i in items:
 					msg = msg + "@id" + str(i) +", "
 				say(msg,event.object.peer_id)
-			if s == -1:
+			if s == 0:
 				admins = []
 				for id in snd.messages.getConversationMembers(peer_id=event.object.peer_id)["items"]:
 					if "is_admin" in id.keys() and id["member_id"] > 0:
@@ -58,7 +57,7 @@ while True:
 						say("Режим просмотра уже запущен. Для дальнейших действий напишите \'!r\'. Осталось: " + str(len(items)),event.object.peer_id)
 						
 						
-			elif s >= 0:
+			elif s >= 1:
 				if  event.object.text.lower() == "!r":
 					if event.object.from_id in items:
 						items.pop(items.index(event.object.from_id))
@@ -66,7 +65,7 @@ while True:
 							s = s + 1
 							if s > len(stages)-1:
 								say("Режим просмотра отключен. Спасибо за прочтение. ", event.object.peer_id)
-								s = -1
+								s = 0
 								continue
 							else:
 								say(stages[s],event.object.peer_id)
